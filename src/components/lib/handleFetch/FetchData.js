@@ -26,7 +26,7 @@ export async function Fetchdata(method, url, body, form) {
 
    // const fullUrl = `http://localhost:8000${url}`;
   
-    const fullUrl = `https://fyp-reservation-backend.vercel.app${url}`;
+    const fullUrl = `https://fyp-backend-ivory.vercel.app${url}`;
   
   const options = {
     method: method,
