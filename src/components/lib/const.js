@@ -1,0 +1,6 @@
+// Password
+const MINPASSLENGTH = 5
+const MAXPASSLENGTH = 12
+
+
+export {MINPASSLENGTH, MAXPASSLENGTH}
