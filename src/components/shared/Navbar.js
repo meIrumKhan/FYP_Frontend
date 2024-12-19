@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { UserRoleContext } from "../../context/Context";
-import { Fetchdata } from "../lib/handleFetch/FetchData";
+import { AuthFetchdata } from "../lib/handleFetch/FetchData";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { isLoggedIn, logout, userProfile } = useContext(UserRoleContext);
 
   const handleLogout = async () => {
-    const resp = await Fetchdata("GET", "/logout");
+    const resp = await AuthFetchdata("GET", "/logout");
     if (resp.logout && resp.logout === true) {
       logout();
       navigate("/signin");

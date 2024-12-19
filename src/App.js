@@ -31,7 +31,7 @@ import AdminDashboard from "./pages/dashboard/adminDashboard";
 import BookFlight from "./pages/bookings/bookFlight";
 import UserBooking from "./pages/bookings/userBookings";
 import AdminBooking from "./pages/bookings/adminBooking";
-import { Fetchdata } from "./components/lib/handleFetch/FetchData";
+import { AuthFetchdata } from "./components/lib/handleFetch/FetchData";
 import AdminUserLayout from "./layout/adminUserLayout";
 
 
@@ -41,7 +41,7 @@ function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const result = await Fetchdata("GET", "/check-auth");
+        const result = await AuthFetchdata("GET", "/check-auth");
 
         if (result.success && result.login) {
           login()

@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from "react";
 import { SignUpShema } from "../../components/lib/validation/Schemas";
 import { useFormik } from "formik";
 import LoadingBar from "react-top-loading-bar";
-import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
+import { AuthFetchdata } from "../../components/lib/handleFetch/FetchData";
 import { Link } from "react-router-dom";
 
 import { toastDisplay, validatePassword } from "../../components/lib/functions";
@@ -18,7 +18,7 @@ const SignupPage = () => {
       loadProgress.current.continuousStart();
     }
     try {
-      const result = await Fetchdata(method, url, body, form);
+      const result = await AuthFetchdata(method, url, body, form);
       if (result.success) {
         toastDisplay(result.message, true);
       } else {

@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import LoadingBar from "react-top-loading-bar";
-import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
+import { AuthFetchdata } from "../../components/lib/handleFetch/FetchData";
 import { SignInSchema } from "../../components/lib/validation/Schemas";
 import { useFormik } from "formik";
 import { UserRoleContext } from "../../context/Context";
@@ -25,7 +25,7 @@ const SigninPage = () => {
         loadProgress.current.continuousStart();
       }
       try {
-        const result = await Fetchdata(method, url, body);
+        const result = await AuthFetchdata(method, url, body);
        
         if (result.success) {
           login()
