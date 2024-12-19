@@ -43,9 +43,9 @@ export async function Fetchdata(method, url, body, form) {
 
    // const fullUrl = `http://localhost:8000${url}`;
   
-    // const fullUrl = `https://fyp-backend-ivory.vercel.app${url}`;
+   const fullUrl = `https://fyp-backend-ivory.vercel.app${url}`;
     
-    const fullUrl = `https://flight-reservation-backend-registration.vercel.app${url}`;
+  
 
   
   const options = {
