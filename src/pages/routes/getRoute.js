@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const GETRoutes = () => {
   const loadProgress = useRef(null);
   const [routesList, setRoutesList] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -23,12 +23,18 @@ const GETRoutes = () => {
       try {
         const result = await Fetchdata(method, url, body);
 
+
         if (result.routes) {
           setRoutesList(result.routes);
         }
         if (result.login === false) {
           toastDisplay(result.message, "error");
         }
+
+        if (result.message) {
+          toastDisplay(result.message, result.success && "success");
+        }
+
         return result;
       } catch (e) {
         console.log(e.message);
@@ -42,23 +48,27 @@ const GETRoutes = () => {
   );
 
   const filteredRoutes = routesList.filter((route) => {
-    const matchesSearchTerm = route.origin.toLowerCase().includes(searchTerm.toLowerCase());
-      
+    const originName = route.origin?.city?.toLowerCase() || "";
+
+    const matchesSearchTerm = originName.includes(searchTerm.toLowerCase());
+
     return matchesSearchTerm;
   });
 
   const handleDelete = async (ID) => {
-    const confirmDelete = window.confirm(
-      "Are you sure for delete this user"
-    );
-    if(confirmDelete){
-      const resp = await handleFetch("POST", "/deleteflightroute", { ID }, false);
-      if(resp.ID){
+    const confirmDelete = window.confirm("Are you sure for delete this user");
+    if (confirmDelete) {
+      const resp = await handleFetch(
+        "POST",
+        "/deleteflightroute",
+        { ID },
+        false
+      );
+      if (resp.ID) {
         const filterRoutes = deleteById(routesList, resp.ID);
         setRoutesList(filterRoutes);
       }
     }
-  
   };
 
   useEffect(() => {
@@ -75,7 +85,7 @@ const GETRoutes = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 rounded-lg">
       <LoadingBar ref={loadProgress} color="#f11946" />
       <Toaster position="top-right" reverseOrder={false} />
-      
+
       <div className="w-full max-w-3xl p-8 rounded-lg">
         <div className="flex gap-4 mb-4">
           <InputField
@@ -92,13 +102,14 @@ const GETRoutes = () => {
         {currentRoute.length > 0 ? (
           currentRoute.map((route, index) => (
             <div className="bg-gradient-to-r from-gray-500 via-gray-300 bg-opacity-50 to-gray-200 transition-transform duration-300  rounded-lg shadow-lg flex flex-col items-center justify-center w-72 h-72 p-5 text-gray-800">
-            
               <h3 className="text-xl font-semibold text-gray-800">
-                {`${route.origin} - ${route.destination}`} 
+                {`${route.origin.city} - ${route.destination.city}`}
               </h3>
-              <h4 className="text-md text-gray-500">Duration : {route.duration}</h4>
+              <h4 className="text-md text-gray-500">
+                Duration : {route.duration}
+              </h4>
               <div className="mt-2 py-1 px-3 font-medium bg-gray-100 text-gray-700 rounded-full text-sm shadow-sm">
-                {route.distance + ' km/h'}
+                {route.distance + " km/h"}
               </div>
 
               <div className="flex space-x-4 mt-4">
@@ -108,12 +119,13 @@ const GETRoutes = () => {
                 >
                   Delete
                 </button>
-                <button className="bg-blue-600 text-white rounded-full px-5 py-2 font-medium hover:bg-blue-500 hover:scale-105  hover:scale-80 transition-transform duration-300"
-                onClick={() =>
-                      navigate("/admin/routes/update", {
-                        state: route,
-                      })
-                    }
+                <button
+                  className="bg-blue-600 text-white rounded-full px-5 py-2 font-medium hover:bg-blue-500 hover:scale-105  hover:scale-80 transition-transform duration-300"
+                  onClick={() =>
+                    navigate("/admin/routes/update", {
+                      state: route,
+                    })
+                  }
                 >
                   Update
                 </button>
@@ -122,7 +134,7 @@ const GETRoutes = () => {
           ))
         ) : (
           <p className="col-span-full text-center text-gray-500">
-            No users found.
+            No route found.
           </p>
         )}
       </div>

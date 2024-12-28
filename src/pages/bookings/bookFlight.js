@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserRoleContext } from "../../context/Context";
 import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
@@ -7,11 +13,11 @@ import { Toaster } from "react-hot-toast";
 import LoadingBar from "react-top-loading-bar";
 
 const BookFlight = () => {
-    const loadProgress = useRef(null);
+  const loadProgress = useRef(null);
   const { logout } = useContext(UserRoleContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const flight = location.state; 
+  const flight = location.state;
   const [seats, setSeats] = useState(1);
 
   const handleFetch = useCallback(
@@ -25,11 +31,9 @@ const BookFlight = () => {
           navigate("/login");
         }
 
-        
-
         if (result.message) {
-          toastDisplay(result.message, result.sucesss);
-        } 
+          toastDisplay(result.message, !result.success && "error");
+        }
 
         return result;
       } catch (e) {
@@ -41,38 +45,40 @@ const BookFlight = () => {
     [logout, navigate]
   );
 
-  const handleCheckout = async() => {
+  const handleCheckout = async () => {
     // console.log({
     //   seats,
     //   flight: location.state._id
     // })
 
-    await handleFetch("POST", "/addbooking", {seats, flights: location.state._id}, false);
-
-
+    await handleFetch(
+      "POST",
+      "/addbooking",
+      { seats, flights: location.state._id },
+      false
+    );
   };
 
-
   useEffect(() => {
-    if(!location.state){
-      navigate('/flights')
+    if (!location.state) {
+      navigate("/flights");
     }
-  },[navigate, location.state])
-
+    console.log(location.state)
+  }, [navigate, location.state]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10">
-     
-     <LoadingBar ref={loadProgress} color="#4A90E2" />
-     <Toaster position="top-right" reverseOrder={false} />
+      <LoadingBar ref={loadProgress} color="#4A90E2" />
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="w-full max-w-lg bg-gray-800 p-6 rounded-lg shadow-lg">
         <div className="mb-4">
           <h2 className="text-xl font-bold">{flight.flightNumber}</h2>
           <p className="text-gray-400">
-            Route: {flight.route?.origin} ➝ {flight.route?.destination}
+            Route: {flight.route?.origin.city} ➝ {flight.route?.destination.city}
           </p>
           <p className="text-gray-400">
-            Departure: {new Date(flight.departureTime).toLocaleString("en-US", {
+            Departure:{" "}
+            {new Date(flight.departureTime).toLocaleString("en-US", {
               dateStyle: "medium",
               timeStyle: "short",
             })}
@@ -81,7 +87,9 @@ const BookFlight = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Select Number of Seats</label>
+          <label className="block text-sm font-medium mb-2">
+            Select Number of Seats
+          </label>
           <input
             type="number"
             min="1"
@@ -94,7 +102,8 @@ const BookFlight = () => {
 
         <div className="mb-4">
           <p className="text-lg font-semibold">
-            Total Amount: <span className="text-gray-300">PKR {seats * flight.price}</span>
+            Total Amount:{" "}
+            <span className="text-gray-300">PKR {seats * flight.price}</span>
           </p>
         </div>
 

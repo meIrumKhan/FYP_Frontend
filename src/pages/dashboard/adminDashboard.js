@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
+import { UserRoleContext } from "../../context/Context";
 
 const AdminDashboard = () => {
+  const { userProfile } =
+  useContext(UserRoleContext);
+
   const [stats, setStats] = useState({
     totalFlights: 0,
     totalBookings: 0,
@@ -31,7 +35,7 @@ const AdminDashboard = () => {
       {/* Dashboard Header */}
       <header className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-        <p className="text-gray-600 mt-2">Welcome back, Admin! Here's an overview of your system.</p>
+        <p className="text-gray-600 mt-2">Welcome back, {userProfile.name}! Here's an overview of your system.</p>
       </header>
 
       {/* Stats Overview */}

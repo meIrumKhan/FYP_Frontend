@@ -50,18 +50,23 @@ const AdminBooking = () => {
     [logout, navigate]
   );
 
-  const handleDelete = async (ticketId) => {
-   
+  const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this booking?"
     );
     if (!confirmDelete) return;
 
-    const result = await handleFetch("POST", `/deletebooking`, {ticketId});
+    const result = await handleFetch("POST", `/deletebooking/${id}`);
     if (result.success) {
-      setData((prevData) => prevData.filter((booking) => booking.ticketId !== ticketId));
+      setData((prevData) => prevData.filter((booking) => booking._id !== id));
       setSelectedBooking(null);
     }
+
+    // const result = await handleFetch("POST", `/deletebooking`, {ticketId});
+    // if (result.success) {
+    //   setData((prevData) => prevData.filter((booking) => booking.ticketId !== ticketId));
+    //   setSelectedBooking(null);
+    // }
   };
 
   useEffect(() => {
@@ -113,7 +118,6 @@ const AdminBooking = () => {
                     <strong>User:</strong> {booking.user?.name || "N/A"} (
                     {booking.user?.email || "N/A"})
                   </p>
-                 
                 </li>
               ))}
             </ul>
@@ -139,7 +143,7 @@ const AdminBooking = () => {
                     <p className="text-lg font-medium">
                       Destination:
                       <span className="text-gray-700 ml-2">
-                        {selectedBooking.flights.route?.destination || "N/A"}
+                        {selectedBooking.flights.route?.destination?.city || "N/A"}
                       </span>
                     </p>
                   </div>
@@ -199,8 +203,9 @@ const AdminBooking = () => {
                   <button
                     className="mt-6 px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent selecting the booking when clicking delete
-                      handleDelete(selectedBooking.ticketId);
+                      e.stopPropagation();
+                      // handleDelete(selectedBooking.ticketId);
+                      handleDelete(selectedBooking._id);
                     }}
                   >
                     Delete Booking

@@ -68,6 +68,7 @@ const AddAirline = () => {
   });
 
   return (
+  
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <LoadingBar ref={loadProgress} color="#4A90E2" />
       <Toaster position="top-right" reverseOrder={false} />
@@ -145,7 +146,7 @@ const AddAirline = () => {
           />
         </form>
       </div>
-    </div>
+     </div>
   );
 };
 

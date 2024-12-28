@@ -70,6 +70,8 @@ function App() {
   }, [login, setUserProfile]);
 
   return (
+
+   
     <Router>
       <Routes>
         {/* Auth Routes */}

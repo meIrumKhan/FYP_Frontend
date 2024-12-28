@@ -16,7 +16,6 @@ import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
 import InputField from "../../components/elements/InputField";
 import Button from "../../components/elements/Button";
 
-
 const UpdateRoute = () => {
   const loadProgress = useRef(null);
   const { logout } = useContext(UserRoleContext);
@@ -43,13 +42,10 @@ const UpdateRoute = () => {
           setOriginCities(result.locations);
         }
 
-
         if (result.success) {
-          toastDisplay(result.message, "success");
-        } else {
-          toastDisplay(result.message, "error");
-        }
-        
+          toastDisplay(result.message, !result.success && "error");
+        }                  
+
         return result;
       } catch (e) {
         console.error(e.message);
@@ -60,56 +56,51 @@ const UpdateRoute = () => {
     [logout, navigate]
   );
 
-
-
   const formik = useFormik({
     initialValues: {
       _id: initalStateValue?._id || "",
-      origin: initalStateValue?.origin || "",
-      destination: initalStateValue?.destination || "",
+      origin: initalStateValue?.origin._id || "",
+      destination: initalStateValue?.destination._id || "",
       duration: initalStateValue?.duration || "",
       distance: initalStateValue?.distance || 0,
     },
     validationSchema: RouteSchema,
     onSubmit: async (values) => {
-      
       try {
-              if (values.origin === values.destination) {
-                toastDisplay("Origin and Destination cannot be the same.", "error");
-                return;
-              }
-              await handleFetch("POST", "/editflightroute", { ...values }, false);
-            } catch (e) {
-              toastDisplay(e.message, "error");
-            }
+        if (values.origin === values.destination) {
+          toastDisplay("Origin and Destination cannot be the same.", "error");
+          return;
+        }
+        await handleFetch("POST", "/editflightroute", { ...values }, false);
+      } catch (e) {
+        toastDisplay(e.message, "error");
+      }
     },
   });
 
   useEffect(() => {
     if (!location.state || !location.state._id) {
       navigate("/routes");
-    }else{
+    } else {
       handleFetch("GET", "/getalllocations");
     }
-   
-  
   }, [navigate, location]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-    <LoadingBar ref={loadProgress} color="#4A90E2" />
-    <Toaster position="top-right" reverseOrder={false} />
-    <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8">
-      <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center">
-        Update Route
-      </h2>
-      <form onSubmit={formik.handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-          <label className="block text-sm font-medium text-gray-600">
+      <LoadingBar ref={loadProgress} color="#4A90E2" />
+      <Toaster position="top-right" reverseOrder={false} />
+      <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8">
+        <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center">
+          Update Route
+        </h2>
+        <form onSubmit={formik.handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-600">
                 Select Origin
               </label>
-              <select
+              {/* <select
                 name="origin"
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 id={"origin"}
@@ -122,19 +113,33 @@ const UpdateRoute = () => {
                     {`${key.city}, ${key.country}`}
                   </option>
                 ))}
+              </select> */}
+              <select
+                name="origin"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id={"origin"}
+                value={formik.values.origin}
+                onChange={formik.handleChange}
+              >
+                <option value="">Select Origin</option>
+                {originCities.map((key, index) => (
+                  <option key={index} value={key._id}>
+                    {`${key.city}, ${key.country}`}
+                  </option>
+                ))}
               </select>
               {formik.touched.origin && formik.errors.origin && (
                 <div className="text-sm text-red-500">
                   {formik.errors.origin}
                 </div>
               )}
-          </div>
+            </div>
 
-          <div>
-          <label className="block text-sm font-medium text-gray-600">
+            <div>
+              <label className="block text-sm font-medium text-gray-600">
                 Select Destination
               </label>
-              <select
+              {/* <select
                 name="destination"
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 id={"destination"}
@@ -147,16 +152,30 @@ const UpdateRoute = () => {
                     {`${key.city}, ${key.country}`}
                   </option>
                 ))}
+              </select> */}
+              <select
+                name="destination"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id={"destination"}
+                value={formik.values.destination}
+                onChange={formik.handleChange}
+              >
+                <option value="">Select Destination</option>
+                {destinationCities.map((key, index) => (
+                  <option key={index} value={key._id}>
+                    {`${key.city}, ${key.country}`}
+                  </option>
+                ))}
               </select>
               {formik.touched.destination && formik.errors.destination && (
                 <div className="text-sm text-red-500">
                   {formik.errors.destination}
                 </div>
               )}
-          </div>
+            </div>
 
-          <div>
-          <label className="block text-sm font-medium text-gray-600">
+            <div>
+              <label className="block text-sm font-medium text-gray-600">
                 Duration
               </label>
               <InputField
@@ -171,10 +190,10 @@ const UpdateRoute = () => {
                   {formik.errors.duration}
                 </div>
               )}
-          </div>
+            </div>
 
-          <div>
-          <label className="block text-sm font-medium text-gray-600">
+            <div>
+              <label className="block text-sm font-medium text-gray-600">
                 Distance
               </label>
               <InputField
@@ -189,16 +208,16 @@ const UpdateRoute = () => {
                   {formik.errors.distance}
                 </div>
               )}
+            </div>
           </div>
-        </div>
 
-        <Button
-          innerText="Submit"
-          className="w-full py-3 text-white bg-gray-800 rounded-lg hover:bg-gray-700 shadow-gray-800"
-        />
-      </form>
+          <Button
+            innerText="Submit"
+            className="w-full py-3 text-white bg-gray-800 rounded-lg hover:bg-gray-700 shadow-gray-800"
+          />
+        </form>
+      </div>
     </div>
-  </div>
   );
 };
 

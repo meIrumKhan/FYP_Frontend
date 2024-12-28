@@ -33,11 +33,9 @@ const AddRoute = () => {
           navigate("/login");
         }
 
-        if (result.success) {
-          toastDisplay(result.message, "success");
-        } else {
-          toastDisplay(result.message, "error");
-        }
+        if (result.message) {
+          toastDisplay(result.message, result.success && "success");
+        } 
 
         if (result.locations) {
           setDestinationCities(result.locations);
@@ -93,7 +91,7 @@ const AddRoute = () => {
               <label className="block text-sm font-medium text-gray-600">
                 Select Origin
               </label>
-              <select
+              {/* <select
                 name="origin"
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 id={"origin"}
@@ -103,6 +101,20 @@ const AddRoute = () => {
                 <option value="">Select Origin</option>
                 {originCities.map((key, index) => (
                   <option key={index} value={key.city}>
+                    {`${key.city}, ${key.country}`}
+                  </option>
+                ))}
+              </select> */}
+              <select
+                name="origin"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id={"origin"}
+                value={formik.values.origin}
+                onChange={formik.handleChange}
+              >
+                <option value="">Select Origin</option>
+                {originCities.map((key, index) => (
+                  <option key={index} value={key._id}>
                     {`${key.city}, ${key.country}`}
                   </option>
                 ))}
@@ -118,7 +130,7 @@ const AddRoute = () => {
               <label className="block text-sm font-medium text-gray-600">
                 Select Destination
               </label>
-              <select
+              {/* <select
                 name="destination"
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 id={"destination"}
@@ -128,6 +140,20 @@ const AddRoute = () => {
                 <option value="">Select Destination</option>
                 {destinationCities.map((key, index) => (
                   <option key={index} value={key.city}>
+                    {`${key.city}, ${key.country}`}
+                  </option>
+                ))}
+              </select> */}
+              <select
+                name="destination"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id={"destination"}
+                value={formik.values.destination}
+                onChange={formik.handleChange}
+              >
+                <option value="">Select Destination</option>
+                {destinationCities.map((key, index) => (
+                  <option key={index} value={key._id}>
                     {`${key.city}, ${key.country}`}
                   </option>
                 ))}

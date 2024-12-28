@@ -36,7 +36,7 @@ const UserBooking = () => {
         }
 
         if (result.message) {
-          toastDisplay(result.message, result.success);
+          toastDisplay(result.message, !result.success  && 'error');
         }
 
         return result;
@@ -48,6 +48,14 @@ const UserBooking = () => {
     },
     [logout, navigate]
   );
+
+  const handleCancelBooking = (id) => {
+   
+    const result = handleFetch('POST', `/cancelbooking/${id}`)
+    if(result.success){
+      setSelectedBooking(null)
+    }
+  };
 
   useEffect(() => {
     handleFetch("GET", "/getuserbooking");
@@ -61,7 +69,8 @@ const UserBooking = () => {
 
       <div className="w-full max-w-6xl flex gap-8">
         {/* List of Bookings */}
-        <div className="w-1/3 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700 overflow-y-auto max-h-[600px]">
+        {/* max-h-[600px] */}
+        <div className="w-1/3 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700 h-56 overflow-y-auto">
           <h2 className="text-xl font-bold mb-4">Select a Booking</h2>
           <ul>
             {data.map((booking) => (
@@ -100,7 +109,6 @@ const UserBooking = () => {
                     </span>
                     Flight Number:
                     <span className="text-white font-bold ml-2">
-                      
                       {selectedBooking.flights?.flightNumber || "N/A"}
                     </span>
                   </p>
@@ -112,7 +120,7 @@ const UserBooking = () => {
                     </span>
                     Destination:
                     <span className="text-white font-bold ml-2">
-                      {selectedBooking.flights.route?.destination || "N/A"}
+                      {selectedBooking.flights.route?.destination?.city || "N/A"}
                     </span>
                   </p>
                 </div>
@@ -159,7 +167,7 @@ const UserBooking = () => {
                     </span>
                   </p>
                 </div>
-                <div className="col-span-2">
+                <div>
                   <p className="text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       calendar_today
@@ -170,7 +178,34 @@ const UserBooking = () => {
                     </span>
                   </p>
                 </div>
+                <div>
+                  <p className="text-lg font-semibold text-gray-300">
+                    <span className="material-icons text-blue-400 align-middle mr-2">
+                      payment
+                    </span>
+                    Payment Status:
+                    <span
+                      className={`ml-2 font-bold ${
+                        selectedBooking.paymentStatus === "Completed"
+                          ? "text-green-500"
+                          : selectedBooking.paymentStatus === "Pending"
+                          ? "text-yellow-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {selectedBooking.paymentStatus}
+                    </span>
+                  </p>
+                </div>
               </div>
+             {selectedBooking.paymentStatus !== 'Cancelled' && <div className="mt-4 flex justify-end">
+                <button
+                  className="w-32 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-700 transition duration-200"
+                  onClick={() => handleCancelBooking(selectedBooking._id)}
+                >
+                  Cancel Booking
+                </button>
+              </div>}
             </div>
           ) : (
             <p className="text-lg text-gray-400 text-center">

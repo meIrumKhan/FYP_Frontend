@@ -25,6 +25,7 @@ const UserFlights = () => {
 
   const location = useLocation();
 
+  // Set filters from the location state if available (for search result pages)
   useEffect(() => {
     if (location.state) {
       const { origin, destination, date } = location.state;
@@ -34,6 +35,7 @@ const UserFlights = () => {
     }
   }, [location.state]);
 
+  // Fetch flights data from the backend API
   const handleFetch = useCallback(async (method, url, body, form) => {
     if (loadProgress.current) loadProgress.current.continuousStart();
 
@@ -56,15 +58,16 @@ const UserFlights = () => {
     handleFetch("GET", "/getallflights");
   }, [handleFetch]);
 
+  // Filter flights based on origin, destination, and date
   const filteredItems = data.filter((item) => {
     const matchesOrigin =
       originFilter === "" ||
-      item.route?.origin.toLowerCase().includes(originFilter.toLowerCase());
+      item.route?.origin?.city.toLowerCase().includes(originFilter.toLowerCase()); // Ensure 'origin' is populated properly
     const matchesDestination =
       destinationFilter === "" ||
-      item.route?.destination
+      item.route?.destination?.city
         .toLowerCase()
-        .includes(destinationFilter.toLowerCase());
+        .includes(destinationFilter.toLowerCase()); // Ensure 'destination' is populated properly
     const matchesDate =
       dateFilter === "" ||
       new Date(item.departureTime).toISOString().split("T")[0] === dateFilter;
@@ -150,7 +153,7 @@ const UserFlights = () => {
                                   flight.airline?.image.data.data
                                 )
                               )
-                            )}`
+                            )}` // Display airline logo if available
                           : "https://via.placeholder.com/150"
                       }
                       alt={flight.airline?.airline}
@@ -158,12 +161,16 @@ const UserFlights = () => {
                   </div>
 
                   <div className="flex-1 px-6">
+                
                     <h2 className="text-xl font-semibold">
-                      {flight.flightNumber}
+                      {flight.flightNumber} - {flight.airline?.code}
+                    </h2>
+                    <h2 className="text-sm font-semibold">
+                      {flight.airline?.airline}
                     </h2>
                     <p className="text-sm mt-1">
-                      Route: {flight.route?.origin} ➝{" "}
-                      {flight.route?.destination}
+                      Route: {flight.route?.origin?.city} ➝{" "}
+                      {flight.route?.destination?.city} {/* Display cities */}
                     </p>
                     <p className="text-sm mt-1">
                       Departure:{" "}

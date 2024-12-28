@@ -114,10 +114,10 @@ const GETAirlines = () => {
         <div className="flex flex-wrap gap-2">
           {currentItems.length > 0 ? (
             currentItems.map((airline, index) => (
-              <div key={index} className="rounded-tl-[50px] p-2 rounded-br-[25px] relative bg-gradient-to-r from-gray-800 via-gray-600 bg-opacity-50 to-gray-400 text-white shadow-lg w-56 m-4">
+              <div key={index} className="rounded-tl-[50px] p-2 rounded-br-[25px] relative bg-gradient-to-r from-gray-800 via-gray-600 bg-opacity-50 to-gray-400 text-white shadow-lg w-56 cursor-pointer">
                 <div className="relative group">
                   <img
-                    className="rounded-tl-[50px] w-56 h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="rounded-tl-[50px] w-64 h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                     src={
                       airline.image && airline.image.contentType && airline.image.data
                         ? `data:${airline.image.contentType};base64,${btoa(
@@ -131,20 +131,19 @@ const GETAirlines = () => {
                   />
 
                   <div className="absolute top-2 right-2">
-                    <button className="bg-blue-500 text-white text-xs font-semibold py-1 px-3 rounded-full shadow-md">
+                    <button className="bg-blue-500 text-white text-xs font-semibold py-1 px-2 rounded-full shadow-md">
                       New
                     </button>
                   </div>
                 </div>
 
-                <div className="mt-2 p-2">
+                <div className="p-2">
                   <h2 className="text-lg font-bold font-medium text-white">
                     {airline.code}
                   </h2>
                   <p className="text-base font-medium text-[14px] text-gray-300">
                     {airline.airline}
                   </p>
-                  
                 </div>
 
                 <div className="mt-1 flex gap-2 justify-center">
@@ -169,7 +168,7 @@ const GETAirlines = () => {
             ))
           ) : (
             <p className="col-span-full text-center text-gray-500">
-              No items available.
+              No airline found.
             </p>
           )}
         </div>

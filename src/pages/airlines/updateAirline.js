@@ -67,7 +67,7 @@ const UpdateAirline = () => {
       airline: initalStateValue?.airline || "",
      
     },
-    validationSchema: AirlineSchema,
+    validationSchema: AirlineSchema, 
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append("id", values._id);
@@ -165,7 +165,7 @@ const UpdateAirline = () => {
               accept="image/*"
               onChange={handleImageChange}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
-              required
+            
             />
             {formik.touched.image && formik.errors.image && (
               <div className="text-red-500 text-sm">

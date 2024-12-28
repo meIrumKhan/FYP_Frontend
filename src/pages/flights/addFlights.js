@@ -70,6 +70,8 @@ const AddFlight = () => {
     },
     validationSchema: FlightsSchema,
     onSubmit: async (values) => {
+
+      console.log(values)
     
       await handleFetch("POST", "/addflight", values, false);
     },
@@ -97,10 +99,10 @@ const AddFlight = () => {
                 value={formik.values.route}
                 onChange={formik.handleChange}
               >
-                <option value="">Select Origin</option>
+                <option value="">Select Route</option>
                 {allroutes.map((key, index) => (
                   <option key={index} value={key._id}>
-                    {`${key.origin}, ${key.destination}`}
+                    {`${key.origin.city} - ${key.destination.city}`}
                   </option>
                 ))}
               </select>

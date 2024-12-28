@@ -103,7 +103,7 @@ const AddLocation = () => {
           </div>
 
           <Button
-            innerText="Add Item"
+            innerText="Submit"
             className="w-full py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
           />
         </form>

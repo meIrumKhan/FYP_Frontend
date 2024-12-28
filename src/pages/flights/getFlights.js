@@ -42,8 +42,6 @@ const GETFlights = () => {
           setData(result.flights);
         }
 
-
-
         return result;
       } catch (e) {
         console.error(e.message);
@@ -59,7 +57,7 @@ const GETFlights = () => {
   }, []);
 
   const handleDelete = async (ID) => {
-    const confirmDelete = window.confirm("Are you sure for delete this flight");
+    const confirmDelete = window.confirm("Are you sure for delete this flight?");
     if (confirmDelete) {
       const resp = await handleFetch("POST", "/deleteflight", { ID }, false);
       if (resp.ID) {
@@ -75,12 +73,10 @@ const GETFlights = () => {
       item.airline?.airline.toLowerCase().includes(airlineFilter.toLowerCase());
     const matchesOrigin =
       originFilter === "" ||
-      item.route?.origin.toLowerCase().includes(originFilter.toLowerCase());
+      item.route?.origin?.city.toLowerCase().includes(originFilter.toLowerCase());  // Access city field
     const matchesDestination =
       destinationFilter === "" ||
-      item.route?.destination
-        .toLowerCase()
-        .includes(destinationFilter.toLowerCase());
+      item.route?.destination?.city.toLowerCase().includes(destinationFilter.toLowerCase());  // Access city field
 
     return matchesAirline && matchesOrigin && matchesDestination;
   });
@@ -124,7 +120,7 @@ const GETFlights = () => {
                 className="flex items-center bg-gradient-to-r from-blue-50 to-gray-100 shadow-lg rounded-xl p-6 w-full hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="w-24 h-24 flex-shrink-0 overflow-hidden rounded-full bg-gray-200 border border-gray-300 shadow-sm">
-                  <img
+                <img
                     className="w-full h-full object-cover"
                     src={
                       flight.airline?.image &&
@@ -156,7 +152,7 @@ const GETFlights = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     Route:{" "}
                     <strong className="text-gray-800">
-                      {flight.route?.origin} ➝ {flight.route?.destination}
+                      {flight.route?.origin?.city} ➝ {flight.route?.destination?.city} {/* Display the city names */}
                     </strong>
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
@@ -185,10 +181,10 @@ const GETFlights = () => {
                     <button
                       className="bg-blue-600 text-white rounded-full px-3 py-1 font-medium hover:bg-blue-500  hover:scale-105 transition-transform duration-300"
                       onClick={() =>
-                      navigate("/admin/flights/update", {
-                        state: flight,
-                      })
-                    }
+                        navigate("/admin/flights/update", {
+                          state: flight,
+                        })
+                      }
                     >
                       Update
                     </button>

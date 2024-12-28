@@ -41,7 +41,7 @@ export async function AuthFetchdata(method, url, body, form) {
 
 export async function Fetchdata(method, url, body, form) {
 
-   // const fullUrl = `http://localhost:8000${url}`;
+  //  const fullUrl = `http://localhost:8000${url}`;
   
    const fullUrl = `https://fyp-backend-ivory.vercel.app${url}`;
     
