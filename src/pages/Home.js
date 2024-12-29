@@ -1,12 +1,60 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/shared/Navbar";
+import { gsap } from "gsap"; 
+import SliderComp from "../components/sections/home/slider";
 
 const HomePage = () => {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
   const navigate = useNavigate();
+
+  const sliderRef = useRef(); 
+  const searchFormRef = useRef(); 
+  const inputRefs = {
+    origin: useRef(),
+    destination: useRef(),
+    date: useRef(),
+  }; // Refs for form inputs
+  const searchButtonRef = useRef(); 
+ 
+  useEffect(() => {
+    gsap.fromTo(
+      sliderRef.current,
+      { opacity: 0, y: -50 },
+      { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }
+    );
+
+   
+    gsap.fromTo(
+      searchFormRef.current,
+      { opacity: 0, scale: 0.8 },
+      { opacity: 1, scale: 1, duration: 1, delay: 0.5, ease: "power2.out" }
+    );
+
+   
+    Object.keys(inputRefs).forEach((key, index) => {
+      gsap.fromTo(
+        inputRefs[key].current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: 1 + index * 0.3, 
+          ease: "power2.out",
+        }
+      );
+    });
+
+   
+    gsap.fromTo(
+      searchButtonRef.current,
+      { opacity: 0, scale: 0.8 },
+      { opacity: 1, scale: 1, duration: 1, delay: 2, ease: "power2.out" }
+    );
+  }, []);
 
   const handleSearch = () => {
     if (origin && destination && date) {
@@ -19,7 +67,7 @@ const HomePage = () => {
   };
 
   const sliderImages = [
-    "/assets/images/lah_isb.jpg", 
+    "/assets/images/lah_isb.jpg",
     "/assets/images/tours.jpg",
   ];
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -38,27 +86,17 @@ const HomePage = () => {
     <div className="bg-gray-900 min-h-screen text-white w-full">
       <Navbar />
       {/* Slider Section */}
-      <section className="relative w-full h-64 md:h-96 overflow-hidden">
-        <img
-          src={sliderImages[currentSlide]}
-          alt={`Slide ${currentSlide + 1}`}
-          className="w-full h-full object-cover"
-        />
-        <button
-          onClick={handlePrevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 p-2 rounded-full text-white hover:bg-blue-500 transition"
-        >
-          ❮
-        </button>
-        <button
-          onClick={handleNextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 p-2 rounded-full text-white hover:bg-blue-500 transition"
-        >
-          ❯
-        </button>
-      </section>
+     
+      <SliderComp
+        sliderImages={sliderImages}
+        currentSlide={currentSlide}
+        handlePrevSlide={handlePrevSlide}
+        handleNextSlide={handleNextSlide}
+        sliderRef={sliderRef}
+      />
 
-      <section className="py-12">
+      {/* Search Form Section */}
+      <section className="py-12" ref={searchFormRef}>
         <div className="max-w-full mx-auto px-6">
           <div className="bg-gray-800 p-8 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold text-center mb-6">
@@ -72,6 +110,7 @@ const HomePage = () => {
                 <input
                   type="text"
                   id="origin"
+                  ref={inputRefs.origin}
                   className="w-full p-3 rounded-lg bg-gray-700 text-white"
                   placeholder="Enter origin"
                   value={origin}
@@ -85,6 +124,7 @@ const HomePage = () => {
                 <input
                   type="text"
                   id="destination"
+                  ref={inputRefs.destination}
                   className="w-full p-3 rounded-lg bg-gray-700 text-white"
                   placeholder="Enter destination"
                   value={destination}
@@ -98,6 +138,7 @@ const HomePage = () => {
                 <input
                   type="date"
                   id="date"
+                  ref={inputRefs.date}
                   className="w-full p-3 rounded-lg bg-gray-700 text-white"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
@@ -107,6 +148,7 @@ const HomePage = () => {
             <div className="mt-6 text-center">
               <button
                 onClick={handleSearch}
+                ref={searchButtonRef}
                 className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-transform transform hover:scale-105"
               >
                 Search Flights

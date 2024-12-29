@@ -9,9 +9,9 @@ import LoadingBar from "react-top-loading-bar";
 import { Toaster } from "react-hot-toast";
 import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
 import { useLocation, useNavigate } from "react-router-dom";
-import InputField from "../../components/elements/InputField";
 import Navbar from "../../components/shared/Navbar";
 import { UserRoleContext } from "../../context/Context";
+import { gsap } from "gsap"; // Import GSAP
 
 const UserFlights = () => {
   const { isLoggedIn } = useContext(UserRoleContext);
@@ -25,7 +25,7 @@ const UserFlights = () => {
 
   const location = useLocation();
 
-  // Set filters from the location state if available (for search result pages)
+  // Set filters from the location state if available
   useEffect(() => {
     if (location.state) {
       const { origin, destination, date } = location.state;
@@ -58,16 +58,13 @@ const UserFlights = () => {
     handleFetch("GET", "/getallflights");
   }, [handleFetch]);
 
-  // Filter flights based on origin, destination, and date
   const filteredItems = data.filter((item) => {
     const matchesOrigin =
       originFilter === "" ||
-      item.route?.origin?.city.toLowerCase().includes(originFilter.toLowerCase()); // Ensure 'origin' is populated properly
+      item.route?.origin?.city.toLowerCase().includes(originFilter.toLowerCase());
     const matchesDestination =
       destinationFilter === "" ||
-      item.route?.destination?.city
-        .toLowerCase()
-        .includes(destinationFilter.toLowerCase()); // Ensure 'destination' is populated properly
+      item.route?.destination?.city.toLowerCase().includes(destinationFilter.toLowerCase());
     const matchesDate =
       dateFilter === "" ||
       new Date(item.departureTime).toISOString().split("T")[0] === dateFilter;
@@ -91,6 +88,36 @@ const UserFlights = () => {
     setDateFilter("");
   };
 
+  
+  useEffect(() => {
+  
+    gsap.fromTo(
+      ".filter-input",
+      { opacity: 0, y: -50 },
+      { opacity: 1, y: 0, duration: 1.2, stagger: 0.3, ease: "power3.out" }
+    );
+
+    gsap.fromTo(
+      ".flight-card",
+      { opacity: 0, scale: 0.9, y: 50 },
+      { opacity: 1, scale: 1, y: 0, duration: 1.5, stagger: 0.3, ease: "power4.out" }
+    );
+
+   
+    gsap.fromTo(
+      ".flight-info-detail",
+      { opacity: 0, x: -50 },
+      { opacity: 1, x: 0, duration: 1, stagger: 0.2, ease: "power2.out" }
+    );
+
+    
+    gsap.fromTo(
+      ".book-now-button",
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 1.2, ease: "power4.out" }
+    );
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -100,31 +127,33 @@ const UserFlights = () => {
 
         <div className="w-full max-w-7xl p-6 rounded-lg">
           <div className="flex justify-center flex-wrap items-center gap-4 mb-4">
-            <InputField
+            <input
+              className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
               name="originFilter"
+              type="text"
               placeholder="Origin"
               value={originFilter}
               onChange={(e) => setOriginFilter(e.target.value)}
-              className="w-64 p-2 bg-gray-800 text-white rounded-md"
             />
-            <InputField
+            <input
+              className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md"
               name="destinationFilter"
+              type="text"
               placeholder="Destination"
               value={destinationFilter}
               onChange={(e) => setDestinationFilter(e.target.value)}
-              className="w-64 p-2 bg-gray-800 text-white rounded-md"
             />
-            <InputField
+            <input
+              className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
               name="dateFilter"
               type="date"
               placeholder="Date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="w-64 p-2 bg-gray-800 text-white rounded-md"
             />
             <button
               onClick={clearFilters}
-              className="px-4 py-2 bg-red-600 text-white shadow-sm shadow-red-600 rounded-md hover:bg-red-500 transition-colors"
+              className="px-5 py-3 bg-red-600 text-white shadow-sm shadow-red-600 rounded-md hover:bg-red-500 transition-colors"
             >
               Clear
             </button>
@@ -136,7 +165,7 @@ const UserFlights = () => {
               filteredItems.map((flight, index) => (
                 <div
                   key={index}
-                  className="flex items-center bg-gray-800 shadow-lg rounded-xl p-6 w-full hover:shadow-2xl transition-shadow duration-300"
+                  className="flight-card flex items-center bg-gray-800 shadow-lg rounded-xl p-6 w-full hover:shadow-2xl transition-shadow duration-300"
                 >
                   <div className="w-20 h-20 flex-shrink-0 overflow-hidden rounded-full bg-gray-700">
                     <img
@@ -153,7 +182,7 @@ const UserFlights = () => {
                                   flight.airline?.image.data.data
                                 )
                               )
-                            )}` // Display airline logo if available
+                            )}` 
                           : "https://via.placeholder.com/150"
                       }
                       alt={flight.airline?.airline}
@@ -161,30 +190,31 @@ const UserFlights = () => {
                   </div>
 
                   <div className="flex-1 px-6">
-                
-                    <h2 className="text-xl font-semibold">
+                    <h2 className="text-xl font-semibold flight-info-detail">
                       {flight.flightNumber} - {flight.airline?.code}
                     </h2>
-                    <h2 className="text-sm font-semibold">
+                    <h2 className="text-sm font-semibold flight-info-detail">
                       {flight.airline?.airline}
                     </h2>
-                    <p className="text-sm mt-1">
+                    <p className="text-sm mt-1 flight-info-detail">
                       Route: {flight.route?.origin?.city} ➝{" "}
-                      {flight.route?.destination?.city} {/* Display cities */}
+                      {flight.route?.destination?.city}
                     </p>
-                    <p className="text-sm mt-1">
+                    <p className="text-sm mt-1 flight-info-detail">
                       Departure:{" "}
                       {new Date(flight.departureTime).toLocaleString("en-US", {
                         dateStyle: "medium",
                         timeStyle: "short",
                       })}
                     </p>
-                    <p className="text-sm mt-1">Price: PKR {flight.price}</p>
+                    <p className="text-sm mt-1 flight-info-detail">
+                      Price: PKR {flight.price}
+                    </p>
                   </div>
 
                   <div className="flex flex-col items-center">
                     <button
-                      className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                      className="book-now-button px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors duration-300"
                       onClick={() => handleFlightBook(flight)}
                     >
                       Book Now
