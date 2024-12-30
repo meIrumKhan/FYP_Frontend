@@ -1,16 +1,12 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserRoleContext } from "../../context/Context";
 import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
 import { toastDisplay } from "../../components/lib/functions";
 import { Toaster } from "react-hot-toast";
 import LoadingBar from "react-top-loading-bar";
+import Confetti from "react-confetti";
+import { Fireworks } from "fireworks-js";
 
 const BookFlight = () => {
   const loadProgress = useRef(null);
@@ -19,6 +15,35 @@ const BookFlight = () => {
   const navigate = useNavigate();
   const flight = location.state;
   const [seats, setSeats] = useState(1);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const fireworksContainer = useRef(null);
+
+  
+  const playCelebration = () => {
+  
+    setShowConfetti(true);
+   
+    if (fireworksContainer.current) {
+      const fireworks = new Fireworks(fireworksContainer.current, {
+        autoresize: true,
+        opacity: 0.5,
+        acceleration: 1.05,
+        friction: 0.97,
+        gravity: 1.5,
+        particles: 50,
+        traceLength: 3,
+      });
+      fireworks.start();
+      setTimeout(() => {
+        fireworks.stop(); 
+      }, 5000);
+    }
+
+
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 5000);
+  };
 
   const handleFetch = useCallback(
     async (method, url, body, form) => {
@@ -29,6 +54,10 @@ const BookFlight = () => {
         if (result.login === false) {
           logout();
           navigate("/login");
+        }
+
+        if (result.success) {
+          playCelebration(); 
         }
 
         if (result.message) {
@@ -46,11 +75,6 @@ const BookFlight = () => {
   );
 
   const handleCheckout = async () => {
-    // console.log({
-    //   seats,
-    //   flight: location.state._id
-    // })
-
     await handleFetch(
       "POST",
       "/addbooking",
@@ -63,13 +87,30 @@ const BookFlight = () => {
     if (!location.state) {
       navigate("/flights");
     }
-    console.log(location.state)
   }, [navigate, location.state]);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10">
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10 relative overflow-hidden">
       <LoadingBar ref={loadProgress} color="#4A90E2" />
       <Toaster position="top-right" reverseOrder={false} />
+
+   
+      {showConfetti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
+
+     
+      <div
+        ref={fireworksContainer}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",  
+          height: "100vh", 
+          zIndex: 9999,
+          pointerEvents: "none", 
+        }}
+      ></div>
+
       <div className="w-full max-w-lg bg-gray-800 p-6 rounded-lg shadow-lg">
         <div className="mb-4">
           <h2 className="text-xl font-bold">{flight.flightNumber}</h2>

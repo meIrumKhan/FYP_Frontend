@@ -19,6 +19,7 @@ const UserFlights = () => {
   const loadProgress = useRef(null);
   const [data, setData] = useState([]);
   const [originFilter, setOriginFilter] = useState("");
+  const [ticketId, setTicketID] = useState("");
   const [destinationFilter, setDestinationFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const navigate = useNavigate();
@@ -61,10 +62,14 @@ const UserFlights = () => {
   const filteredItems = data.filter((item) => {
     const matchesOrigin =
       originFilter === "" ||
-      item.route?.origin?.city.toLowerCase().includes(originFilter.toLowerCase());
+      item.route?.origin?.city
+        .toLowerCase()
+        .includes(originFilter.toLowerCase());
     const matchesDestination =
       destinationFilter === "" ||
-      item.route?.destination?.city.toLowerCase().includes(destinationFilter.toLowerCase());
+      item.route?.destination?.city
+        .toLowerCase()
+        .includes(destinationFilter.toLowerCase());
     const matchesDate =
       dateFilter === "" ||
       new Date(item.departureTime).toISOString().split("T")[0] === dateFilter;
@@ -82,15 +87,20 @@ const UserFlights = () => {
     }
   };
 
+  const verifyTicket = () => {
+    if (ticketId) {
+      console.log(ticketId);
+      navigate(`/ticket/${ticketId}`);
+    }
+  };
+
   const clearFilters = () => {
     setOriginFilter("");
     setDestinationFilter("");
     setDateFilter("");
   };
 
-  
   useEffect(() => {
-  
     gsap.fromTo(
       ".filter-input",
       { opacity: 0, y: -50 },
@@ -100,17 +110,22 @@ const UserFlights = () => {
     gsap.fromTo(
       ".flight-card",
       { opacity: 0, scale: 0.9, y: 50 },
-      { opacity: 1, scale: 1, y: 0, duration: 1.5, stagger: 0.3, ease: "power4.out" }
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 1.5,
+        stagger: 0.3,
+        ease: "power4.out",
+      }
     );
 
-   
     gsap.fromTo(
       ".flight-info-detail",
       { opacity: 0, x: -50 },
       { opacity: 1, x: 0, duration: 1, stagger: 0.2, ease: "power2.out" }
     );
 
-    
     gsap.fromTo(
       ".book-now-button",
       { opacity: 0, y: 50 },
@@ -126,6 +141,26 @@ const UserFlights = () => {
         <Toaster position="top-right" reverseOrder={false} />
 
         <div className="w-full max-w-7xl p-6 rounded-lg">
+          {/* Verify booking */}
+          <div className="flex justify-center flex-wrap items-center gap-4 mb-4">
+            <input
+              className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
+              name="verify"
+              type="text"
+              placeholder="Ticket ID"
+              value={ticketId}
+              onChange={(e) => setTicketID(e.target.value)}
+              aria-label="Enter ticket ID"
+            />
+            <button
+              onClick={verifyTicket}
+              className="px-5 py-3 bg-blue-600 text-white shadow-sm shadow-blue-600 rounded-md hover:bg-blue-500 transition-colors disabled:bg-gray-500"
+            >
+              Verify Ticket
+            </button>
+          </div>
+          {/* Search Flight */}
+
           <div className="flex justify-center flex-wrap items-center gap-4 mb-4">
             <input
               className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
@@ -182,7 +217,7 @@ const UserFlights = () => {
                                   flight.airline?.image.data.data
                                 )
                               )
-                            )}` 
+                            )}`
                           : "https://via.placeholder.com/150"
                       }
                       alt={flight.airline?.airline}

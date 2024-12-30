@@ -11,7 +11,7 @@ import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
 import { toastDisplay } from "../../components/lib/functions";
 import { Toaster } from "react-hot-toast";
 import LoadingBar from "react-top-loading-bar";
-import { gsap } from "gsap"; // Import GSAP for animations
+import { gsap } from "gsap";
 
 const UserBooking = () => {
   const loadProgress = useRef(null);
@@ -37,7 +37,7 @@ const UserBooking = () => {
         }
 
         if (result.message) {
-          toastDisplay(result.message, !result.success && 'error');
+          toastDisplay(result.message, !result.success && "error");
         }
 
         return result;
@@ -157,7 +157,8 @@ const UserBooking = () => {
                     </span>
                     Destination:
                     <span className="text-white font-bold ml-2">
-                      {selectedBooking.flights.route?.destination?.city || "N/A"}
+                      {selectedBooking.flights.route?.destination?.city ||
+                        "N/A"}
                     </span>
                   </p>
                 </div>
@@ -234,8 +235,37 @@ const UserBooking = () => {
                     </span>
                   </p>
                 </div>
+
+                {/* Display QR Code */}
+                <div className="booking-detail">
+                  <p className="text-lg font-semibold text-gray-300">
+                    <span className="material-icons text-blue-400 align-middle mr-2">
+                      qr_code_scanner
+                    </span>
+                    QR Code:
+                  </p>
+                  {/* <img
+                    src={selectedBooking.qrCode}
+                    alt="QR Code"
+                    className="w-32 h-32 mt-2"
+                  /> */}
+                  <img
+                    className="w-32 h-32 object-cover rounded-md m-2"
+                    src={
+                      selectedBooking.qrCode && selectedBooking.qrCode.contentType && selectedBooking.qrCode.data
+                        ? `data:${selectedBooking.qrCode.contentType};base64,${btoa(
+                            String.fromCharCode(
+                              ...new Uint8Array(selectedBooking.qrCode.data.data)
+                            )
+                          )}`
+                        : "default-image-url.jpg"
+                    }
+                    alt={selectedBooking.qrCode}
+                  />
+
+                </div>
               </div>
-              {selectedBooking.paymentStatus !== 'Cancelled' && (
+              {selectedBooking.paymentStatus !== "Cancelled" && (
                 <div className="mt-4 flex justify-end">
                   <button
                     className="cancel-button w-32 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-700 transition duration-200"

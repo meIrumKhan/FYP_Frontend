@@ -33,6 +33,7 @@ import UserBooking from "./pages/bookings/userBookings";
 import AdminBooking from "./pages/bookings/adminBooking";
 import { Fetchdata } from "./components/lib/handleFetch/FetchData";
 import AdminUserLayout from "./layout/adminUserLayout";
+import VerifyTicket from "./pages/bookings/verifyTicket";
 
 
 function App() {
@@ -126,6 +127,7 @@ function App() {
         )}
 
         <Route path="flights" element={<UserFlights />} />
+        <Route path="ticket/:ticketId" element={<VerifyTicket />} />
 
         {/* User Routes */}
         {isLoggedIn && !userProfile.isAdmin && (

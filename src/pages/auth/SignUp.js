@@ -1,17 +1,16 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import { SignUpShema } from "../../components/lib/validation/Schemas";
 import { useFormik } from "formik";
 import LoadingBar from "react-top-loading-bar";
 import { Fetchdata } from "../../components/lib/handleFetch/FetchData";
 import { Link } from "react-router-dom";
-
 import { toastDisplay, validatePassword } from "../../components/lib/functions";
 import { Toaster } from "react-hot-toast";
+import { gsap } from "gsap";
 
 const SignupPage = () => {
   const loadProgress = useRef(null);
-
-  
+  const formRef = useRef(null);
 
   const handleFetch = useCallback(async (method, url, body, form) => {
     if (loadProgress.current) {
@@ -39,7 +38,7 @@ const SignupPage = () => {
     password: "",
     name: "",
     phno: 0,
-    isAdmin: false
+    isAdmin: false,
   };
 
   const formik = useFormik({
@@ -49,22 +48,63 @@ const SignupPage = () => {
       const Password = validatePassword(values.password);
       if (Password.isValid) {
         await handleFetch("POST", "/signup", { ...values }, false);
-        console.log(values)
+        console.log(values);
       } else {
-        toastDisplay(Password.message, 'error');
+        toastDisplay(Password.message, "error");
       }
     },
   });
 
+  useEffect(() => {
+   
+    const timeline = gsap.timeline({ defaults: { duration: 0.8, ease: "power3.out" } });
+
+    timeline
+      .fromTo(
+        ".signup-container",
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1 }
+      )
+      .fromTo(
+        ".signup-header",
+        { opacity: 0, y: -50 },
+        { opacity: 1, y: 0 },
+        "-=0.8"
+      )
+      .fromTo(
+        ".signup-form .form-item",
+        { opacity: 0, x: -30 },
+        { opacity: 1, x: 0, stagger: 0.3 },
+        "-=0.5"
+      )
+      .fromTo(
+        ".signup-form button",
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1 },
+        "-=0.5"
+      )
+      .fromTo(
+        ".signup-footer",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0 },
+        "-=0.5"
+      );
+  }, []);
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-2  md:p-0">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-2 md:p-0">
       <LoadingBar ref={loadProgress} color="#f11946" />
       <Toaster position="top-right" reverseOrder={false} />
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-        <form onSubmit={formik.handleSubmit} className="mt-4">
+      <div
+        ref={formRef}
+        className="signup-container bg-white p-8 rounded-lg shadow-lg"
+      >
+        <h2 className="signup-header text-2xl font-bold mb-6 text-center">
+          Sign Up
+        </h2>
+        <form onSubmit={formik.handleSubmit} className="signup-form mt-4">
           <div className="flex flex-wrap gap-5 justify-center mb-2">
-            <div className="">
+            <div className="form-item">
               <label className="block text-sm font-medium mb-2" htmlFor="name">
                 Your's Name
               </label>
@@ -80,7 +120,7 @@ const SignupPage = () => {
                 <div className="text-danger">{formik.errors.name}</div>
               ) : null}
             </div>
-            <div className="">
+            <div className="form-item">
               <label
                 className="block text-sm font-medium mb-2"
                 htmlFor="userEmail"
@@ -102,7 +142,7 @@ const SignupPage = () => {
           </div>
 
           <div className="flex flex-wrap gap-5 justify-center mb-2">
-            <div className="mb-4">
+            <div className="form-item mb-4">
               <label
                 className="block text-sm font-medium mb-2"
                 htmlFor="userPhno"
@@ -122,7 +162,7 @@ const SignupPage = () => {
               ) : null}
             </div>
 
-            <div className="mb-4">
+            <div className="form-item mb-4">
               <label
                 className="block text-sm font-medium mb-2"
                 htmlFor="storePassword"
@@ -143,20 +183,16 @@ const SignupPage = () => {
             </div>
           </div>
 
-          
-
           <div className="flex justify-center">
             <button
-            type="submit"
-              className={
-                "bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-[8px] w-full text-white font-medium"
-              }
+              type="submit"
+              className="form-item bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-[8px] w-full text-white font-medium transition-transform transform hover:scale-105"
             >
               Sign Up
             </button>
           </div>
         </form>
-        <h5 className="h5 text-large text-center p-3">
+        <h5 className="signup-footer h5 text-large text-center p-3">
           <Link className="text-blue-500 font-bold" to={"/signin"}>
             Sign In
           </Link>{" "}
