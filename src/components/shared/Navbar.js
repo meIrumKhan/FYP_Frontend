@@ -30,7 +30,7 @@ const Navbar = () => {
         AirTik
       </div>
 
-      <div className="hidden md:flex space-x-6">
+      <div className="flex space-x-6">
         <Link
           to="/flights"
           className="text-sm font-medium hover:text-gray-300 transition"
@@ -68,6 +68,8 @@ const Navbar = () => {
         )}
       </div>
     </nav>
+   
+
   );
 };
 

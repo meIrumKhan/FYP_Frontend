@@ -99,30 +99,32 @@ const UserBooking = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10">
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10 px-4">
       <LoadingBar ref={loadProgress} color="#4A90E2" />
       <Toaster position="top-right" reverseOrder={false} />
-      <h1 className="text-3xl font-bold mb-6">Your Bookings</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">Your Bookings</h1>
 
-      <div className="w-full max-w-6xl flex gap-8">
-        {/* List of Bookings */}
-        <div className="w-1/3 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700 h-56 overflow-y-auto">
-          <h2 className="text-xl font-bold mb-4">Select a Booking</h2>
+      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8">
+     
+        <div className="w-full md:w-1/3 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700 h-56 overflow-y-auto">
+          <h2 className="text-lg md:text-xl font-bold mb-4">
+            Select a Booking
+          </h2>
           <ul>
             {data.map((booking) => (
               <li
                 key={booking._id}
-                className={`booking-list-item p-3 mb-3 rounded-lg cursor-pointer ${
+                className={`p-3 mb-3 rounded-lg cursor-pointer ${
                   selectedBooking?._id === booking._id
                     ? "bg-blue-500 text-white"
                     : "bg-gray-700 text-gray-300"
                 } hover:bg-blue-400`}
                 onClick={() => setSelectedBooking(booking)}
               >
-                <p>
+                <p className="text-xs md:text-sm">
                   <strong>Booking ID:</strong> {booking.ticketId}
                 </p>
-                <p>
+                <p className="text-xs md:text-sm">
                   <strong>Flight:</strong>{" "}
                   {booking.flights?.flightNumber || "N/A"}
                 </p>
@@ -131,16 +133,17 @@ const UserBooking = () => {
           </ul>
         </div>
 
-        {/* Booking Details */}
-        <div className="w-2/3 bg-gradient-to-r from-gray-800 via-gray-900 to-black p-6 rounded-lg shadow-lg border border-gray-700">
+        
+        <div className="w-full md:w-2/3 bg-gradient-to-r from-gray-800 via-gray-900 to-black p-6 rounded-lg shadow-lg border border-gray-700">
           {selectedBooking ? (
             <div>
-              <h2 className="text-2xl font-extrabold mb-4 text-blue-400 flex items-center gap-2">
+              <h2 className="text-xl md:text-2xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 flex items-center gap-2">
                 Booking Details: {selectedBooking.ticketId}
               </h2>
-              <div className="grid grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       airplanemode_active
                     </span>
@@ -151,7 +154,7 @@ const UserBooking = () => {
                   </p>
                 </div>
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       location_on
                     </span>
@@ -163,7 +166,7 @@ const UserBooking = () => {
                   </p>
                 </div>
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       schedule
                     </span>
@@ -176,7 +179,7 @@ const UserBooking = () => {
                   </p>
                 </div>
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       event_seat
                     </span>
@@ -187,7 +190,7 @@ const UserBooking = () => {
                   </p>
                 </div>
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       confirmation_number
                     </span>
@@ -198,7 +201,7 @@ const UserBooking = () => {
                   </p>
                 </div>
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     Total Price:
                     <span className="text-white font-bold ml-2">
                       PKR {selectedBooking.totalPrice}
@@ -206,7 +209,7 @@ const UserBooking = () => {
                   </p>
                 </div>
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       calendar_today
                     </span>
@@ -217,7 +220,7 @@ const UserBooking = () => {
                   </p>
                 </div>
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       payment
                     </span>
@@ -236,35 +239,37 @@ const UserBooking = () => {
                   </p>
                 </div>
 
-                {/* Display QR Code */}
+               
                 <div className="booking-detail">
-                  <p className="text-lg font-semibold text-gray-300">
+                  <p className="text-sm md:text-lg font-semibold text-gray-300">
                     <span className="material-icons text-blue-400 align-middle mr-2">
                       qr_code_scanner
                     </span>
                     QR Code:
                   </p>
-                  {/* <img
-                    src={selectedBooking.qrCode}
-                    alt="QR Code"
-                    className="w-32 h-32 mt-2"
-                  /> */}
+
                   <img
-                    className="w-32 h-32 object-cover rounded-md m-2"
+                    className="w-24 md:w-32 h-24 md:h-32 object-cover rounded-md m-2"
                     src={
-                      selectedBooking.qrCode && selectedBooking.qrCode.contentType && selectedBooking.qrCode.data
-                        ? `data:${selectedBooking.qrCode.contentType};base64,${btoa(
+                      selectedBooking.qrCode &&
+                      selectedBooking.qrCode.contentType &&
+                      selectedBooking.qrCode.data
+                        ? `data:${
+                            selectedBooking.qrCode.contentType
+                          };base64,${btoa(
                             String.fromCharCode(
-                              ...new Uint8Array(selectedBooking.qrCode.data.data)
+                              ...new Uint8Array(
+                                selectedBooking.qrCode.data.data
+                              )
                             )
                           )}`
                         : "default-image-url.jpg"
                     }
                     alt={selectedBooking.qrCode}
                   />
-
                 </div>
               </div>
+
               {selectedBooking.paymentStatus !== "Cancelled" && (
                 <div className="mt-4 flex justify-end">
                   <button

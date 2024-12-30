@@ -89,7 +89,6 @@ const UserFlights = () => {
 
   const verifyTicket = () => {
     if (ticketId) {
-      console.log(ticketId);
       navigate(`/ticket/${ticketId}`);
     }
   };
@@ -136,15 +135,14 @@ const UserFlights = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white px-4">
         <LoadingBar ref={loadProgress} color="#f11946" />
         <Toaster position="top-right" reverseOrder={false} />
 
         <div className="w-full max-w-7xl p-6 rounded-lg">
-          {/* Verify booking */}
-          <div className="flex justify-center flex-wrap items-center gap-4 mb-4">
+          <div className="flex flex-col md:flex-row justify-center flex-wrap items-center gap-4 mb-4">
             <input
-              className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
+              className="filter-input w-full md:w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
               name="verify"
               type="text"
               placeholder="Ticket ID"
@@ -154,16 +152,15 @@ const UserFlights = () => {
             />
             <button
               onClick={verifyTicket}
-              className="px-5 py-3 bg-blue-600 text-white shadow-sm shadow-blue-600 rounded-md hover:bg-blue-500 transition-colors disabled:bg-gray-500"
+              className="px-5 py-3 w-full md:w-auto bg-blue-600 text-white shadow-sm shadow-blue-600 rounded-md hover:bg-blue-500 transition-colors disabled:bg-gray-500"
             >
               Verify Ticket
             </button>
           </div>
-          {/* Search Flight */}
 
-          <div className="flex justify-center flex-wrap items-center gap-4 mb-4">
+          <div className="flex flex-col md:flex-row justify-center flex-wrap items-center gap-4 mb-4">
             <input
-              className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
+              className="filter-input w-full md:w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
               name="originFilter"
               type="text"
               placeholder="Origin"
@@ -171,7 +168,7 @@ const UserFlights = () => {
               onChange={(e) => setOriginFilter(e.target.value)}
             />
             <input
-              className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md"
+              className="filter-input w-full md:w-64 p-3 bg-gray-800 text-white rounded-md"
               name="destinationFilter"
               type="text"
               placeholder="Destination"
@@ -179,7 +176,7 @@ const UserFlights = () => {
               onChange={(e) => setDestinationFilter(e.target.value)}
             />
             <input
-              className="filter-input w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
+              className="filter-input w-full md:w-64 p-3 bg-gray-800 text-white rounded-md shadow-md"
               name="dateFilter"
               type="date"
               placeholder="Date"
@@ -188,21 +185,20 @@ const UserFlights = () => {
             />
             <button
               onClick={clearFilters}
-              className="px-5 py-3 bg-red-600 text-white shadow-sm shadow-red-600 rounded-md hover:bg-red-500 transition-colors"
+              className="px-5 py-3 w-full md:w-auto bg-red-600 text-white shadow-sm shadow-red-600 rounded-md hover:bg-red-500 transition-colors"
             >
               Clear
             </button>
           </div>
 
-          {/* Flights */}
           <div className="flex flex-col gap-4">
             {filteredItems.length > 0 ? (
               filteredItems.map((flight, index) => (
                 <div
                   key={index}
-                  className="flight-card flex items-center bg-gray-800 shadow-lg rounded-xl p-6 w-full hover:shadow-2xl transition-shadow duration-300"
+                  className="flight-card flex flex-col md:flex-row items-center bg-gray-800 shadow-lg rounded-xl p-6 w-full hover:shadow-2xl transition-shadow duration-300"
                 >
-                  <div className="w-20 h-20 flex-shrink-0 overflow-hidden rounded-full bg-gray-700">
+                  <div className="w-24 h-24 md:w-20 md:h-20 flex-shrink-0 overflow-hidden rounded-full bg-gray-700 mb-4 md:mb-0">
                     <img
                       className="w-full h-full object-cover"
                       src={
@@ -224,8 +220,8 @@ const UserFlights = () => {
                     />
                   </div>
 
-                  <div className="flex-1 px-6">
-                    <h2 className="text-xl font-semibold flight-info-detail">
+                  <div className="flex-1 px-6 text-center md:text-left">
+                    <h2 className="text-lg md:text-xl font-semibold flight-info-detail">
                       {flight.flightNumber} - {flight.airline?.code}
                     </h2>
                     <h2 className="text-sm font-semibold flight-info-detail">
@@ -247,7 +243,7 @@ const UserFlights = () => {
                     </p>
                   </div>
 
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center mt-4 md:mt-0">
                     <button
                       className="book-now-button px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors duration-300"
                       onClick={() => handleFlightBook(flight)}
